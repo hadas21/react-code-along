@@ -1,17 +1,21 @@
 import React from 'react';
 import RecipeCard from './RecipeCard';
+import Container from 'react-bootstrap/Row';
+import Row from 'react-bootstrap/Row';
 
 function RecipeCards(props) {
     return (
-        <div>
-            {props.recipies.map(item => {
-                return <RecipeCard 
-                    recipe={item.recipe}
-                    ingredients={item.ingredients}
-                    key={`recipe-card-${item.recipe}`}
-                />
-            })}
-        </div>
+        <Container>
+            <Row>
+                {props.recipies.map(item => {
+                    return <RecipeCard 
+                        recipe={item.recipe}
+                        ingredients={item.ingredients}
+                        key={`recipe-card-${item.recipe}`}
+                    />
+                })}
+            </Row>
+        </Container>
     )
 }
 

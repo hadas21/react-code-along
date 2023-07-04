@@ -1,9 +1,10 @@
 import React from 'react';
 import IngredientList from './IngredientList';
+import Col from 'react-bootstrap/Col';
 
 function RecipeCard(props) {
     return (
-        <div>
+        <Col>
             <h5>
                 {props.recipe}
             </h5>
@@ -11,7 +12,7 @@ function RecipeCard(props) {
                 recipe={props.recipe}
                 ingredients={props.ingredients}
             />
-        </div>
+        </Col>
     )
 }
 
