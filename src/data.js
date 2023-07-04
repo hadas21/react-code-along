@@ -13,7 +13,7 @@ const recipeArr = [
     },
     {
         recipe: 'Spaghetti Alla Putanescca',
-        ingredients: ['spaghatti', 'tomato', 'capers', 'olive oil', 'anchovies', 'red chili']
+        ingredients: ['spaghetti', 'tomato', 'capers', 'olive oil', 'anchovies', 'red chili']
     }
 ]
 

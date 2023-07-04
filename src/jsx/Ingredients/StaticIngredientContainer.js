@@ -1,6 +1,6 @@
 import React from 'react';
 
-function IngredientContainer(props) {
+function StaticIngredientContainer(props) {
     return (
         <div>
             <h4>
@@ -15,4 +15,4 @@ function IngredientContainer(props) {
     
 }
 
-export default IngredientContainer;
+export default StaticIngredientContainer;

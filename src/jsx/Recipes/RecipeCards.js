@@ -1,7 +1,7 @@
 import React from 'react';
 import RecipeCard from './RecipeCard';
 
-function DynamicRecipeCards(props) {
+function RecipeCards(props) {
     return (
         <div>
             {props.recipies.map(item => {
@@ -15,4 +15,4 @@ function DynamicRecipeCards(props) {
     )
 }
 
-export default DynamicRecipeCards;
+export default RecipeCards;
