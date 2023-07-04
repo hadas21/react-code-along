@@ -1,11 +1,10 @@
 import React from 'react';
-import recipeArr from '../data';
 import RecipeCard from './RecipeCard';
 
-function DynamicRecipeCards() {
+function DynamicRecipeCards(props) {
     return (
         <div>
-            {recipeArr.map(item => {
+            {props.recipies.map(item => {
                 return <RecipeCard 
                     recipe={item.recipe}
                     ingredients={item.ingredients}

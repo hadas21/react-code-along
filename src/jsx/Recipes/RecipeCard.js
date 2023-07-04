@@ -4,9 +4,9 @@ import IngredientList from './IngredientList';
 function RecipeCard(props) {
     return (
         <div>
-            <h4>
+            <h5>
                 {props.recipe}
-            </h4>
+            </h5>
             <IngredientList 
                 recipe={props.recipe}
                 ingredients={props.ingredients}
