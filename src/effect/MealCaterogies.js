@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react'
-import { getMealCategories, getMealByCategory } from './api';
+import { getMealCategories, getMealsByCategory, getMealById } from './api';
 
 function MealCategories() {
     const [categories, setCategories] = useState([]);
     const [activeCategory, setActiveCategory] = useState('');
+    const [categoryMeals, setCategoryMeals] = useState({});
     const [meals, setMeals] = useState({});
 
     useEffect(() => {
@@ -16,20 +17,20 @@ function MealCategories() {
                 setCategories(categoriesArr);
             });
         } else {
-            // const mealCategories = ['Beef', 'Chicken', 'Dessert', 'Lamb', 'Miscellaneous', 'Pasta', 'Pork', 'Seafood'];
-            // setCategories(mealCategories);
+            const mealCategories = ['Beef', 'Chicken', 'Dessert', 'Lamb', 'Miscellaneous', 'Pasta', 'Pork', 'Seafood'];
+            setCategories(mealCategories);
         }
     }, []);
 
     useEffect(() => {
-        if (meals.hasOwnProperty(activeCategory)) {
+        if (categoryMeals.hasOwnProperty(activeCategory)) {
         } else if (activeCategory !== '') {
-            getMealByCategory(activeCategory).then(res => {
-                const udpatedMeals = {
+            getMealsByCategory(activeCategory).then(res => {
+                const udpateCategorydMeals = {
                     [activeCategory]: res.meals,
-                    ...meals,
+                    ...categoryMeals,
                 }
-                setMeals(udpatedMeals);
+                setCategoryMeals(udpateCategorydMeals);
             });
         }
     }, [activeCategory]);
@@ -38,21 +39,56 @@ function MealCategories() {
         setActiveCategory(item);
     }
 
+    function handleGetMealDetails(id) {
+        if (!meals.hasOwnProperty(id)) {
+            getMealById(id).then(res => {
+                const udpatedMeals = {
+                    [id]: res.meals,
+                    ...meals
+                }
+                console.log(udpatedMeals);
+                setMeals(udpatedMeals);
+            });
+        }
+    }
+
     return (
         <div>
-            <div>
-                Food Categories:
-            </div>
+            <div>Food Categories:</div>
             {categories.map(item => 
                 <button
-                key={`category-${item}`}
-                value={item}
-                onClick={(e) => handleSetActiveCategory(e.target.value)} 
-                >
+                    key={`category-${item}`}
+                    value={item}
+                    onClick={(e) => handleSetActiveCategory(e.target.value)} 
+                    >
                     {item}
                 </button>
             )}
             <div>Active Category: {activeCategory}</div>
+            <br/>
+            <div>Meals:</div>
+            {
+               categoryMeals.hasOwnProperty(activeCategory) && 
+                    categoryMeals[activeCategory].map(item => {
+                        return (
+                            <div>
+                                <button
+                                    key={`meal-${item.idMeal}`}
+                                    value={item.idMeal}
+                                    onClick={(e) => handleGetMealDetails(e.target.value)} 
+                                    >
+                                    {item.strMeal}
+                                </button>
+                                <div>
+                                    {
+                                        meals.hasOwnProperty(item.idMeal) &&
+                                            item.idMeal
+                                    }
+                                </div>
+                            </div>
+                        );
+                    })
+            }
         </div>
     )
 }
