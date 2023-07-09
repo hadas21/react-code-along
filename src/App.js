@@ -1,7 +1,7 @@
-import './App.css';
 import StaticRecipeCards from './components/StaticRecipeCards';
 import StaticMeals from './jsx/StaticMeals'
 import Meals from './state/Meals';
+import MealCategories from './effect/MealCaterogies';
 
 function App() {
   return (
@@ -9,7 +9,8 @@ function App() {
       <header className="App-header">
         {/* <StaticRecipeCards/> */}
         {/* <StaticMeals/> */}
-        <Meals/>
+        {/* <Meals/> */}
+        <MealCategories/>
       </header>
     </div>
   );

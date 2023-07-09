@@ -7,7 +7,7 @@ import { sort, filterIngredient, pushIngredient, getActiveRecipies, getAllIngred
 
 function Meals() {
     const [activeIngredients, setActiveIngredients] = useState(sort(getAllIngredients(recipeArr)));
-    const [discardedIngredients, setdiscardedIngredients] = useState([]);
+    const [discardedIngredients, setDiscardedIngredients] = useState([]);
     const [activeRecipies, setActiveRecipies] = useState(recipeArr);
     
     function discardIngredient(ingredientToRemove) {
@@ -16,7 +16,7 @@ function Meals() {
         const updatedActiveRecipies = getActiveRecipies(updatedActiveIngredients, recipeArr);
 
         setActiveIngredients(sort(updatedActiveIngredients));
-        setdiscardedIngredients(sort(updatedDiscardedIngredients))
+        setDiscardedIngredients(sort(updatedDiscardedIngredients))
         setActiveRecipies(updatedActiveRecipies);
     }
     
@@ -26,10 +26,9 @@ function Meals() {
         const updatedActiveRecipies = getActiveRecipies(updatedActiveIngredients, recipeArr)
 
         setActiveIngredients(sort(updatedActiveIngredients));
-        setdiscardedIngredients(sort(updatedDiscardedIngredients));
+        setDiscardedIngredients(sort(updatedDiscardedIngredients));
         setActiveRecipies(updatedActiveRecipies);
     }
-
 
     return (
         <div>
