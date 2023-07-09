@@ -1,18 +1,39 @@
 import React, {useState, useEffect} from 'react'
-import getMealCategories from './api';
+import { getMealCategories, getMealByCategory } from './api';
 
 function MealCategories() {
     const [categories, setCategories] = useState([]);
     const [activeCategory, setActiveCategory] = useState('');
+    const [meals, setMeals] = useState({});
 
     useEffect(() => {
-        // fetch('https://themealdb.com/api/json/v1/1/categories.php')
-        //     .then(res => res.json())
-        //     .then(res => console.log(res))
-        const mealCategories = ['Italian', 'French', 'Seafood', 'Vegan'];
-        setCategories(mealCategories);
+        if (false) {
+            getMealCategories().then(res => {
+                const categoriesArr = res.categories.map(item => {
+                    return item.strCategory;
+                });
+                
+                setCategories(categoriesArr);
+            });
+        } else {
+            // const mealCategories = ['Beef', 'Chicken', 'Dessert', 'Lamb', 'Miscellaneous', 'Pasta', 'Pork', 'Seafood'];
+            // setCategories(mealCategories);
+        }
     }, []);
 
+    useEffect(() => {
+        if (meals.hasOwnProperty(activeCategory)) {
+        } else if (activeCategory !== '') {
+            getMealByCategory(activeCategory).then(res => {
+                const udpatedMeals = {
+                    [activeCategory]: res.meals,
+                    ...meals,
+                }
+                setMeals(udpatedMeals);
+            });
+        }
+    }, [activeCategory]);
+    
     function handleSetActiveCategory(item) {
         setActiveCategory(item);
     }
