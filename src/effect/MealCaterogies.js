@@ -2,18 +2,36 @@ import React, {useState, useEffect} from 'react'
 import getMealCategories from './api';
 
 function MealCategories() {
-    const [jokes, setJoke] = useState('');
+    const [categories, setCategories] = useState([]);
+    const [activeCategory, setActiveCategory] = useState('');
 
     useEffect(() => {
-        // getMealCategories().then(res => setJoke(res.value));
-        fetch('https://themealdb.com/api/json/v1/1/categories.php')
-            .then(res => res.json())
-            .then(res => console.log(res))
+        // fetch('https://themealdb.com/api/json/v1/1/categories.php')
+        //     .then(res => res.json())
+        //     .then(res => console.log(res))
+        const mealCategories = ['Italian', 'French', 'Seafood', 'Vegan'];
+        setCategories(mealCategories);
     }, []);
+
+    function handleSetActiveCategory(item) {
+        setActiveCategory(item);
+    }
 
     return (
         <div>
-            Hi
+            <div>
+                Food Categories:
+            </div>
+            {categories.map(item => 
+                <button
+                key={`category-${item}`}
+                value={item}
+                onClick={(e) => handleSetActiveCategory(e.target.value)} 
+                >
+                    {item}
+                </button>
+            )}
+            <div>Active Category: {activeCategory}</div>
         </div>
     )
 }
