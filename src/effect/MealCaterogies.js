@@ -1,60 +1,81 @@
 import React, {useState, useEffect} from 'react'
 import { getMealCategories, getMealsByCategory, getMealById } from './api';
+import IngredientContainer from './IngredientContainer';
+import { sort, filterIngredient, pushIngredient, getActiveRecipies, getAllIngredients } from '../utils';
 
 function MealCategories() {
     const [categories, setCategories] = useState([]);
     const [activeCategory, setActiveCategory] = useState('');
-    const [categoryMeals, setCategoryMeals] = useState({});
     const [meals, setMeals] = useState({});
+    const [allIngredients, setAllIngredients] = useState([]);
+    const [availableIngredients, setAvailableIngredients] = useState([]);
 
     useEffect(() => {
-        if (false) {
-            getMealCategories().then(res => {
-                const categoriesArr = res.categories.map(item => {
-                    return item.strCategory;
-                });
-                
-                setCategories(categoriesArr);
+        getMealCategories().then(res => {
+            const categoriesArr = res.categories.map(item => {
+                return item.strCategory;
             });
-        } else {
-            const mealCategories = ['Beef', 'Chicken', 'Dessert', 'Lamb', 'Miscellaneous', 'Pasta', 'Pork', 'Seafood'];
-            setCategories(mealCategories);
-        }
+            
+            setCategories(categoriesArr);
+        });
     }, []);
 
     useEffect(() => {
-        if (categoryMeals.hasOwnProperty(activeCategory)) {
-        } else if (activeCategory !== '') {
-            getMealsByCategory(activeCategory).then(res => {
-                const udpateCategorydMeals = {
-                    [activeCategory]: res.meals,
-                    ...categoryMeals,
-                }
-                setCategoryMeals(udpateCategorydMeals);
+        if (activeCategory !== '' && !meals.hasOwnProperty(activeCategory)) {
+            getMealsByCategory(activeCategory).then(mealRes => {
+                
+                const mealDetailsPromiseArr = mealRes.meals.map(item => {
+                    return getMealById(item.idMeal);
+                });
+
+                Promise.all(mealDetailsPromiseArr).then(mealDeetsRes => {
+                    const formattedRes = mealDeetsRes.map(item => {
+                        return item.meals[0];
+                    })
+
+                    const updatedMeals = {
+                        [activeCategory]: formattedRes,
+                        ...meals,
+                    }
+
+                    setMeals(updatedMeals);
+                    setAvailableIngredients([]);
+                    setAllIngredients(sort(getIngredients(updatedMeals)));
+                });
             });
         }
     }, [activeCategory]);
+
+    function getIngredients(meals) {
+        return  meals[activeCategory].reduce((prev, curr) => {
+            for (let i = 1; i <= 20; i++) {
+                let ingredientKey = `strIngredient${i}`;
+                let ingredient  = curr[ingredientKey];
+                if (ingredient && ingredient !== '' && !prev.includes(ingredient)) {
+                    prev.push(ingredient);
+                }
+            }
+            return prev;
+        }, []);
+    }
     
     function handleSetActiveCategory(item) {
         setActiveCategory(item);
     }
 
-    function handleGetMealDetails(id) {
-        if (!meals.hasOwnProperty(id)) {
-            getMealById(id).then(res => {
-                const udpatedMeals = {
-                    [id]: res.meals,
-                    ...meals
-                }
-                console.log(udpatedMeals);
-                setMeals(udpatedMeals);
-            });
-        }
+    function addIngredient (item) {
+        const updatedAvailableIngredients = pushIngredient(item, availableIngredients);
+        setAvailableIngredients(sort(updatedAvailableIngredients));
+    }
+
+    function removeIngredient (item) {
+        const updatedAvailableIngredients = filterIngredient(item, availableIngredients);
+        setAvailableIngredients(sort(updatedAvailableIngredients));
     }
 
     return (
         <div>
-            <div>Food Categories:</div>
+            <h4>Food Categories:</h4>
             {categories.map(item => 
                 <button
                     key={`category-${item}`}
@@ -64,27 +85,23 @@ function MealCategories() {
                     {item}
                 </button>
             )}
+            <br/>
             <div>Active Category: {activeCategory}</div>
             <br/>
-            <div>Meals:</div>
+            <IngredientContainer
+                allIngredients={allIngredients}
+                availableIngredients={availableIngredients}
+                handleAddIngredient={addIngredient}
+                handleRemoveIngredient={removeIngredient}
+            />
+            <br/>
+            <h4>Meals:</h4>
             {
-               categoryMeals.hasOwnProperty(activeCategory) && 
-                    categoryMeals[activeCategory].map(item => {
+               meals.hasOwnProperty(activeCategory) && 
+                    meals[activeCategory].map(item => {
                         return (
-                            <div>
-                                <button
-                                    key={`meal-${item.idMeal}`}
-                                    value={item.idMeal}
-                                    onClick={(e) => handleGetMealDetails(e.target.value)} 
-                                    >
-                                    {item.strMeal}
-                                </button>
-                                <div>
-                                    {
-                                        meals.hasOwnProperty(item.idMeal) &&
-                                            item.idMeal
-                                    }
-                                </div>
+                            <div key={`meal-${item.strMeal}`}>
+                                {item.strMeal}
                             </div>
                         );
                     })
