@@ -9,6 +9,7 @@ function IngredientContainer(props) {
         <Container>
             <Row>
                 <AllIngredients 
+                    countedIngredients={props.countedIngredients}
                     allIngredients={props.allIngredients}
                     handleAddIngredient={props.handleAddIngredient}
                 />
