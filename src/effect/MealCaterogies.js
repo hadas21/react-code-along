@@ -1,7 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import { getMealCategories, getMealsByCategory, getMealById } from './api';
 import IngredientContainer from './IngredientContainer';
-import { sort, filterIngredient, pushIngredient, getActiveRecipies, getAllIngredients } from '../utils';
+import { sort, filterIngredient, pushIngredient } from '../utils';
+import FoodCategories from './FoodCategories';
+import Meals from './Meals';
 
 function MealCategories() {
     const [categories, setCategories] = useState([]);
@@ -85,7 +87,7 @@ function MealCategories() {
     }
 
     function getActiveMeals(availableIngredients) {
-        return  meals[activeCategory].reduce((prev, curr) => {
+        return meals[activeCategory].reduce((prev, curr) => {
             const mealIngredientsArr = []
             for (let i = 1; i <= 20; i++) {
                 let ingredientKey = `strIngredient${i}`;
@@ -113,31 +115,12 @@ function MealCategories() {
         }, []);
     }
 
-    function getMealStyle(id) {
-        return activeMeals.includes(id) ? mealActive : mealInactive;
-    }
-
-    const mealInactive = {
-        'backgroundColor': 'gray'
-    }
-
-    const mealActive = {
-        'backgroundColor': 'lightblue',
-        'color': 'white'
-    }
-
     return (
         <div>
-            <h4>Food Categories:</h4>
-            {categories.map(item => 
-                <button
-                    key={`category-${item}`}
-                    value={item}
-                    onClick={(e) => handleSetActiveCategory(e.target.value)} 
-                    >
-                    {item}
-                </button>
-            )}
+            <FoodCategories
+                categories={categories}
+                handleSetActiveCategory={handleSetActiveCategory}
+            />
             <br/>
             <div>Active Category: {activeCategory}</div>
             <br/>
@@ -148,17 +131,11 @@ function MealCategories() {
                 handleRemoveIngredient={removeIngredient}
             />
             <br/>
-            <h4>Meals:</h4>
-            {
-               meals.hasOwnProperty(activeCategory) && 
-                    meals[activeCategory].map(item => {
-                        return (
-                            <div style={getMealStyle(item.idMeal)} key={`meal-${item.strMeal}`}>
-                                {item.strMeal}
-                            </div>
-                        );
-                    })
-            }
+            <Meals
+                activeMeals={activeMeals}
+                meals={meals}
+                activeCategory={activeCategory}
+            />
         </div>
     )
 }
