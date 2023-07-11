@@ -26,31 +26,34 @@ function MealCategories() {
     useEffect(() => {
         if (activeCategory !== '' && !meals.hasOwnProperty(activeCategory)) {
             getMealsByCategory(activeCategory).then(mealRes => {
-                
                 const mealDetailsPromiseArr = mealRes.meals.map(item => {
                     return getMealById(item.idMeal);
                 });
 
-                Promise.all(mealDetailsPromiseArr).then(mealDeetsRes => {
-                    const formattedRes = mealDeetsRes.map(item => {
-                        return item.meals[0];
-                    })
-
-                    const updatedMeals = {
-                        [activeCategory]: formattedRes,
-                        ...meals,
-                    }
-
-                    setMeals(updatedMeals);
-                    setAvailableIngredients([]);
-                    setAllIngredients(sort(getIngredients(updatedMeals)));
-                });
+                getMealDetails(mealDetailsPromiseArr);
             });
         }
     }, [activeCategory]);
 
+    function getMealDetails(mealDetailsPromiseArr) {
+        Promise.all(mealDetailsPromiseArr).then(res => {
+            const formattedRes = res.map(item => {
+                return item.meals[0];
+            })
+
+            const updatedMeals = {
+                [activeCategory]: formattedRes,
+                ...meals,
+            }
+
+            setMeals(updatedMeals);
+            setAvailableIngredients([]);
+            setAllIngredients(sort(getIngredients(updatedMeals)));
+        });
+    }
+
     function getIngredients(meals) {
-        return  meals[activeCategory].reduce((prev, curr) => {
+        return meals[activeCategory].reduce((prev, curr) => {
             for (let i = 1; i <= 20; i++) {
                 let ingredientKey = `strIngredient${i}`;
                 let ingredient  = curr[ingredientKey];
@@ -86,28 +89,36 @@ function MealCategories() {
         setActiveMeals(getActiveMeals(updatedAvailableIngredients));
     }
 
+    function getMealIngredients(meal) {
+        const ingredientsArr = []
+        for (let i = 1; i <= 20; i++) {
+            let ingredientKey = `strIngredient${i}`;
+            let ingredient  = meal[ingredientKey];
+            if (ingredient && ingredient !== '') {
+                ingredientsArr.push(ingredient);
+            }
+        }
+        return ingredientsArr;
+    }
+
+    function isMealActive(mealIngredients, availableIngredients) {
+        let isActiveMeal = true;
+
+        for (let i = 0; i < mealIngredients.length; i++) {
+            if (!availableIngredients.includes(mealIngredients[i])) {
+                isActiveMeal = false;
+                break;
+            }
+        }
+
+        return isActiveMeal;
+    }
+
     function getActiveMeals(availableIngredients) {
         return meals[activeCategory].reduce((prev, curr) => {
-            const mealIngredientsArr = []
-            for (let i = 1; i <= 20; i++) {
-                let ingredientKey = `strIngredient${i}`;
-                let ingredient  = curr[ingredientKey];
-                if (ingredient && ingredient !== '') {
-                    mealIngredientsArr.push(ingredient);
-                }
-            }
-            
-            let isActiveMeal = true;
+            const mealIngredientsArr = getMealIngredients(curr)
 
-            for (let i = 0; i < mealIngredientsArr.length; i++) {
-                if (!availableIngredients.includes(mealIngredientsArr[i])) {
-                    isActiveMeal = false;
-                    break;
-                }
-
-            }
-
-            if (isActiveMeal) {
+            if (isMealActive(mealIngredientsArr, availableIngredients)) {
                 prev.push(curr.idMeal);
             }
 
