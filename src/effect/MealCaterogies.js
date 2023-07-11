@@ -9,6 +9,7 @@ function MealCategories() {
     const [meals, setMeals] = useState({});
     const [allIngredients, setAllIngredients] = useState([]);
     const [availableIngredients, setAvailableIngredients] = useState([]);
+    const [activeMeals, setActiveMeals] = useState([]);
 
     useEffect(() => {
         getMealCategories().then(res => {
@@ -63,14 +64,66 @@ function MealCategories() {
         setActiveCategory(item);
     }
 
-    function addIngredient (item) {
+    function addIngredient(item) {
         const updatedAvailableIngredients = pushIngredient(item, availableIngredients);
+        const updatedAllIngredients = filterIngredient(item, allIngredients);
+        
+        setAllIngredients(sort(updatedAllIngredients));
         setAvailableIngredients(sort(updatedAvailableIngredients));
+        
+        setActiveMeals(getActiveMeals(updatedAvailableIngredients));
     }
 
-    function removeIngredient (item) {
+    function removeIngredient(item) {
         const updatedAvailableIngredients = filterIngredient(item, availableIngredients);
+        const updatedAllIngredients = pushIngredient(item, allIngredients);
+        
+        setAllIngredients(sort(updatedAllIngredients));
         setAvailableIngredients(sort(updatedAvailableIngredients));
+
+        setActiveMeals(getActiveMeals(updatedAvailableIngredients));
+    }
+
+    function getActiveMeals(availableIngredients) {
+        return  meals[activeCategory].reduce((prev, curr) => {
+            const mealIngredientsArr = []
+            for (let i = 1; i <= 20; i++) {
+                let ingredientKey = `strIngredient${i}`;
+                let ingredient  = curr[ingredientKey];
+                if (ingredient && ingredient !== '') {
+                    mealIngredientsArr.push(ingredient);
+                }
+            }
+            
+            let isActiveMeal = true;
+
+            for (let i = 0; i < mealIngredientsArr.length; i++) {
+                if (!availableIngredients.includes(mealIngredientsArr[i])) {
+                    isActiveMeal = false;
+                    break;
+                }
+
+            }
+
+            if (isActiveMeal) {
+                prev.push(curr.idMeal);
+            }
+
+            return prev;
+        }, []);
+    }
+
+    function getMealStyle(id) {
+        return activeMeals.includes(id) ? mealActive : mealInactive;
+    }
+
+    const mealInactive = {
+        'backgroundColor': 'gray'
+    }
+
+    const mealActive = {
+        'backgroundColor': 'lightblue',
+        'color': 'white'
     }
 
     return (
@@ -100,7 +153,7 @@ function MealCategories() {
                meals.hasOwnProperty(activeCategory) && 
                     meals[activeCategory].map(item => {
                         return (
-                            <div key={`meal-${item.strMeal}`}>
+                            <div style={getMealStyle(item.idMeal)} key={`meal-${item.strMeal}`}>
                                 {item.strMeal}
                             </div>
                         );

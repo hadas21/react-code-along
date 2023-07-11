@@ -20,8 +20,7 @@ function pushIngredient(value, targetArr) {
     return [...targetArr, value];
 }
 
-function getActiveRecipies(updatedActiveIngredients, recipeArr) {
-        
+function getActiveRecipies(updatedActiveIngredients, recipeArr) { 
     return [...recipeArr].filter(recipeObj => {
         let keepRecipe = true;
 
