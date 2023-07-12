@@ -25,6 +25,7 @@ function StyledMeals() {
     }, []);
 
     useEffect(() => {
+        setAvailableMeals([]);
         if (activeCategory === '' ) {
             return ;
         }
