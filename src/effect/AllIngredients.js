@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 
 
 function AllIngredients(props) {
@@ -31,13 +32,15 @@ function AllIngredients(props) {
             </h4>
             {props.allIngredients.length > 0 && props.allIngredients.map(item =>{
                 return (
-                    <div key={`all-ingredients-${item}`}>
-                        <span style={getIngredientStyle(item)}>{item}</span>
-                        <button
-                            value={item}
-                            onClick={(e) => props.handleAddIngredient(e.target.value)}
-                        >+</button>
-                    </div>
+                    <Row key={`all-ingredients-${item}`}>
+                        <Col style={getIngredientStyle(item)}>{item}</Col>
+                        <Col>
+                            <button
+                                value={item}
+                                onClick={(e) => props.handleAddIngredient(e.target.value)}
+                            >+</button>
+                        </Col>
+                    </Row>
                 );
             })}
         </Col>

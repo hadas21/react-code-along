@@ -4,7 +4,6 @@ import IngredientContainer from '../effect/IngredientContainer';
 import { sort, filterIngredient, pushIngredient } from '../utils';
 import FoodCategories from '../effect/FoodCategories';
 import IngredientScale from './IngredientScale';
-import Container from 'react-bootstrap/Container'
 
 function StyledMeals() {
     const [categories, setCategories] = useState([]);
@@ -66,7 +65,9 @@ function StyledMeals() {
             const ingredientsWithCountsObj = getIngredientsWithCounts(updatedMeals[activeCategory]);            
             setCountedIngredients(ingredientsWithCountsObj);
             setSuggestedIngredients(sort(Object.keys(ingredientsWithCountsObj)));
-        });
+        }).catch(() => {
+            alert(`There was a problem searching ${activeCategory} meals.`);
+        })
     }
 
     function getIngredientsWithCounts(meals) {
@@ -152,9 +153,9 @@ function StyledMeals() {
             <FoodCategories
                 categories={categories}
                 handleSetActiveCategory={handleSetActiveCategory}
+                activeCategory={activeCategory}
             />
             <br/>
-            <Container>Active Category: {activeCategory}</Container>
             <br/>
             {
                 Object.keys(countedIngredients).length > 0 && 

@@ -16,7 +16,7 @@ function Meals(props) {
 
     return (
         <Col>
-            <h4>Meals:</h4>
+            <h4>Meals</h4>
             {
                 props.activeMeals !== undefined && props.activeMeals.length > 0 && 
                 props.activeMeals.map(item => {
