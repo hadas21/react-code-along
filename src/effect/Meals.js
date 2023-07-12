@@ -11,7 +11,8 @@ function Meals(props) {
     }
 
     const mealActive = {
-        'backgroundColor': 'lightblue'
+        'backgroundColor': 'blue',
+        'color': 'white'
     }
 
     return (

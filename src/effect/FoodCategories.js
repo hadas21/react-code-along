@@ -5,7 +5,7 @@ function FoodCategories(props) {
 
     function getButtonStyle(item, props) {
         if (props.hasOwnProperty('activeCategory') && item === props.activeCategory) {
-            return {'backgroundColor': 'lightblue', 'color': 'white'}
+            return {'backgroundColor': 'blue', 'color': 'white'}
         }
         return
     }
