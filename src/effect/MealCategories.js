@@ -1,17 +1,18 @@
 import React, {useState, useEffect} from 'react'
-import { getMealCategories, getMealsByCategory, getMealById } from './api';
-import IngredientContainer from './IngredientContainer';
+import { getMealCategories, getMealsByCategory, getMealById } from '../effect/api';
+import IngredientContainer from '../effect/IngredientContainer';
 import { sort, filterIngredient, pushIngredient } from '../utils';
-import FoodCategories from './FoodCategories';
-import Meals from './Meals';
+import FoodCategories from '../effect/FoodCategories';
+import Container from 'react-bootstrap/Container'
 
-function MealCategories() {
+function StyledMeals() {
     const [categories, setCategories] = useState([]);
     const [activeCategory, setActiveCategory] = useState('');
-    const [meals, setMeals] = useState({});
-    const [allIngredients, setAllIngredients] = useState([]);
+    const [allMeals, setAllMeals] = useState({});
+    const [activeMeals, setActiveMeals] = useState({});
+    const [suggestedIngredients, setSuggestedIngredients] = useState([])
     const [availableIngredients, setAvailableIngredients] = useState([]);
-    const [activeMeals, setActiveMeals] = useState([]);
+    const [availableMeals, setAvailableMeals] = useState([]);
 
     useEffect(() => {
         getMealCategories().then(res => {
@@ -24,7 +25,10 @@ function MealCategories() {
     }, []);
 
     useEffect(() => {
-        if (activeCategory !== '' && !meals.hasOwnProperty(activeCategory)) {
+        if (activeCategory === '' ) {
+            return ;
+        }
+        if (!allMeals.hasOwnProperty(activeCategory)) {
             getMealsByCategory(activeCategory).then(mealRes => {
                 const mealDetailsPromiseArr = mealRes.meals.map(item => {
                     return getMealById(item.idMeal);
@@ -32,6 +36,12 @@ function MealCategories() {
 
                 getMealDetails(mealDetailsPromiseArr);
             });
+        } else {
+            setActiveMeals(allMeals[activeCategory]);
+            setAvailableIngredients([]);
+
+            const ingredientsWithCountsObj = getIngredientsWithCounts(allMeals[activeCategory]);            
+            setSuggestedIngredients(sort(Object.keys(ingredientsWithCountsObj)));
         }
     }, [activeCategory]);
 
@@ -43,26 +53,33 @@ function MealCategories() {
 
             const updatedMeals = {
                 [activeCategory]: formattedRes,
-                ...meals,
+                ...allMeals,
             }
 
-            setMeals(updatedMeals);
+            setAllMeals(updatedMeals);
+            setActiveMeals(updatedMeals[activeCategory])
             setAvailableIngredients([]);
-            setAllIngredients(sort(getIngredients(updatedMeals)));
+
+            const ingredientsWithCountsObj = getIngredientsWithCounts(updatedMeals[activeCategory]);
+            setSuggestedIngredients(sort(Object.keys(ingredientsWithCountsObj)));
         });
     }
 
-    function getIngredients(meals) {
-        return meals[activeCategory].reduce((prev, curr) => {
+    function getIngredientsWithCounts(meals) {
+        return meals.reduce((prev, curr) => {
             for (let i = 1; i <= 20; i++) {
                 let ingredientKey = `strIngredient${i}`;
                 let ingredient  = curr[ingredientKey];
-                if (ingredient && ingredient !== '' && !prev.includes(ingredient)) {
-                    prev.push(ingredient);
+                if (ingredient && ingredient !== '') {
+                    if (prev.hasOwnProperty(ingredient)) {
+                        prev[ingredient] += 1;
+                    } else {
+                        prev[ingredient] = 1;
+                    }
                 }
             }
             return prev;
-        }, []);
+        }, {});
     }
     
     function handleSetActiveCategory(item) {
@@ -71,22 +88,22 @@ function MealCategories() {
 
     function addIngredient(item) {
         const updatedAvailableIngredients = pushIngredient(item, availableIngredients);
-        const updatedAllIngredients = filterIngredient(item, allIngredients);
+        const updatedSuggestedIngredients = filterIngredient(item, suggestedIngredients);
         
-        setAllIngredients(sort(updatedAllIngredients));
+        setSuggestedIngredients(sort(updatedSuggestedIngredients));
         setAvailableIngredients(sort(updatedAvailableIngredients));
         
-        setActiveMeals(getActiveMeals(updatedAvailableIngredients));
+        setAvailableMeals(getActiveMeals(updatedAvailableIngredients));
     }
 
     function removeIngredient(item) {
         const updatedAvailableIngredients = filterIngredient(item, availableIngredients);
-        const updatedAllIngredients = pushIngredient(item, allIngredients);
+        const updatedSuggestedIngredients = pushIngredient(item, suggestedIngredients);
         
-        setAllIngredients(sort(updatedAllIngredients));
+        setSuggestedIngredients(sort(updatedSuggestedIngredients));
         setAvailableIngredients(sort(updatedAvailableIngredients));
 
-        setActiveMeals(getActiveMeals(updatedAvailableIngredients));
+        setAvailableMeals(getActiveMeals(updatedAvailableIngredients));
     }
 
     function getMealIngredients(meal) {
@@ -115,7 +132,7 @@ function MealCategories() {
     }
 
     function getActiveMeals(availableIngredients) {
-        return meals[activeCategory].reduce((prev, curr) => {
+        return allMeals[activeCategory].reduce((prev, curr) => {
             const mealIngredientsArr = getMealIngredients(curr)
 
             if (isMealActive(mealIngredientsArr, availableIngredients)) {
@@ -133,22 +150,18 @@ function MealCategories() {
                 handleSetActiveCategory={handleSetActiveCategory}
             />
             <br/>
-            <div>Active Category: {activeCategory}</div>
+            <Container>Active Category: {activeCategory}</Container>
             <br/>
             <IngredientContainer
-                allIngredients={allIngredients}
+                allIngredients={suggestedIngredients}
                 availableIngredients={availableIngredients}
                 handleAddIngredient={addIngredient}
                 handleRemoveIngredient={removeIngredient}
-            />
-            <br/>
-            <Meals
                 activeMeals={activeMeals}
-                meals={meals}
-                activeCategory={activeCategory}
+                availableMeals={availableMeals}
             />
         </div>
     )
 }
 
-export default MealCategories;
+export default StyledMeals;

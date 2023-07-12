@@ -3,8 +3,8 @@ import { getMealCategories, getMealsByCategory, getMealById } from '../effect/ap
 import IngredientContainer from '../effect/IngredientContainer';
 import { sort, filterIngredient, pushIngredient } from '../utils';
 import FoodCategories from '../effect/FoodCategories';
-import Meals from '../effect/Meals';
 import IngredientScale from './IngredientScale';
+import Container from 'react-bootstrap/Container'
 
 function StyledMeals() {
     const [categories, setCategories] = useState([]);
@@ -154,7 +154,7 @@ function StyledMeals() {
                 handleSetActiveCategory={handleSetActiveCategory}
             />
             <br/>
-            <div>Active Category: {activeCategory}</div>
+            <Container>Active Category: {activeCategory}</Container>
             <br/>
             {
                 Object.keys(countedIngredients).length > 0 && 
@@ -169,9 +169,6 @@ function StyledMeals() {
                 availableIngredients={availableIngredients}
                 handleAddIngredient={addIngredient}
                 handleRemoveIngredient={removeIngredient}
-            />
-            <br/>
-            <Meals
                 activeMeals={activeMeals}
                 availableMeals={availableMeals}
             />

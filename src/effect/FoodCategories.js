@@ -1,8 +1,9 @@
 import React from 'react';
+import Container from 'react-bootstrap/Container';
 
 function FoodCategories(props) {
     return (
-        <div>
+        <Container>
             <h4>Food Categories:</h4>
             {props.categories.map(item => 
                 <button
@@ -13,7 +14,7 @@ function FoodCategories(props) {
                     {item}
                 </button>
             )}
-        </div>
+        </Container>
     )
 }
 

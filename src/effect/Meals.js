@@ -1,4 +1,5 @@
 import React from "react";
+import Col from 'react-bootstrap/Col'
 
 function Meals(props) {
     function getMealStyle(id) {
@@ -6,16 +7,15 @@ function Meals(props) {
     }
 
     const mealInactive = {
-        'backgroundColor': 'gray'
+        'backgroundColor': 'lightgray'
     }
 
     const mealActive = {
-        'backgroundColor': 'lightblue',
-        'color': 'white'
+        'backgroundColor': 'lightblue'
     }
 
     return (
-        <div>
+        <Col>
             <h4>Meals:</h4>
             {
                 props.activeMeals !== undefined && props.activeMeals.length > 0 && 
@@ -23,11 +23,11 @@ function Meals(props) {
                     return (
                         <div style={getMealStyle(item.idMeal)} key={`meal-${item.strMeal}`}>
                                 {item.strMeal}
-                            </div>
-                        );
-                    })
+                        </div>
+                    );
+                })
             }
-        </div>
+        </Col>
     )
 }
 

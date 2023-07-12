@@ -1,6 +1,7 @@
 import React from 'react';
 import AllIngredients from './AllIngredients';
 import AvailableIngredients from './AvailableIngredients';
+import Meals from './Meals';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 
@@ -16,6 +17,10 @@ function IngredientContainer(props) {
                 <AvailableIngredients 
                     availableIngredients={props.availableIngredients}
                     handleRemoveIngredient={props.handleRemoveIngredient}
+                />
+                <Meals
+                    activeMeals={props.activeMeals}
+                    availableMeals={props.availableMeals}
                 />
             </Row>
         </Container>

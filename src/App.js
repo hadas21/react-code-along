@@ -1,7 +1,7 @@
 import StaticRecipeCards from './components/StaticRecipeCards';
 import StaticMeals from './jsx/StaticMeals'
 import Meals from './state/Meals';
-import MealCategories from './effect/MealCaterogies';
+import MealCategories from './effect/MealCategories';
 import StyledMeals from './styling/StyledMeals';
 
 function App() {

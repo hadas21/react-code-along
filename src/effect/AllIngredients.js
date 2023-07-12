@@ -31,8 +31,8 @@ function AllIngredients(props) {
             </h4>
             {props.allIngredients.length > 0 && props.allIngredients.map(item =>{
                 return (
-                    <div style={getIngredientStyle(item)} key={`all-ingredients-${item}`}>
-                        {item}
+                    <div key={`all-ingredients-${item}`}>
+                        <span style={getIngredientStyle(item)}>{item}</span>
                         <button
                             value={item}
                             onClick={(e) => props.handleAddIngredient(e.target.value)}

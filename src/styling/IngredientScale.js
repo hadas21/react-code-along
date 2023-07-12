@@ -34,13 +34,13 @@ function IngredientScale(props) {
         <Container>    
             <h4>Ingredient Frequency</h4>
             <Row>
-                <Col style={{'textAlign':'right'}}>Fewer Meals</Col>
+                <Col style={{'textAlign':'right', 'fontWeight': 'bold'}}>Fewer Meals</Col>
                 {scaleStyles.map((item, i) => {
                     return (
                         <Col key={i} style={item}></Col>  
                     ) 
                 })}
-                <Col style={{'textAlign':'left'}}>More Meals</Col>
+                <Col style={{'textAlign':'left', 'fontWeight': 'bold'}}>More Meals</Col>
             </Row>
         </Container>
     )
