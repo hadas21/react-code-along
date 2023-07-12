@@ -2,7 +2,7 @@ import React from "react";
 
 function Meals(props) {
     function getMealStyle(id) {
-        return props.activeMeals.includes(id) ? mealActive : mealInactive;
+        return props.availableMeals.includes(id) ? mealActive : mealInactive;
     }
 
     const mealInactive = {
@@ -18,8 +18,8 @@ function Meals(props) {
         <div>
             <h4>Meals:</h4>
             {
-                props.meals.hasOwnProperty(props.activeCategory) && 
-                props.meals[props.activeCategory].map(item => {
+                props.activeMeals !== undefined && props.activeMeals.length > 0 && 
+                props.activeMeals.map(item => {
                     return (
                         <div style={getMealStyle(item.idMeal)} key={`meal-${item.strMeal}`}>
                                 {item.strMeal}

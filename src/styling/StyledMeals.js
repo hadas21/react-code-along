@@ -9,11 +9,12 @@ import IngredientScale from './IngredientScale';
 function StyledMeals() {
     const [categories, setCategories] = useState([]);
     const [activeCategory, setActiveCategory] = useState('');
-    const [meals, setMeals] = useState({});
+    const [allMeals, setAllMeals] = useState({});
+    const [activeMeals, setActiveMeals] = useState({});
     const [countedIngredients, setCountedIngredients] = useState({});
     const [suggestedIngredients, setSuggestedIngredients] = useState([])
     const [availableIngredients, setAvailableIngredients] = useState([]);
-    const [activeMeals, setActiveMeals] = useState([]);
+    const [availableMeals, setAvailableMeals] = useState([]);
 
     useEffect(() => {
         getMealCategories().then(res => {
@@ -26,7 +27,10 @@ function StyledMeals() {
     }, []);
 
     useEffect(() => {
-        if (activeCategory !== '' && !meals.hasOwnProperty(activeCategory)) {
+        if (activeCategory === '' ) {
+            return ;
+        }
+        if (!allMeals.hasOwnProperty(activeCategory)) {
             getMealsByCategory(activeCategory).then(mealRes => {
                 const mealDetailsPromiseArr = mealRes.meals.map(item => {
                     return getMealById(item.idMeal);
@@ -34,6 +38,13 @@ function StyledMeals() {
 
                 getMealDetails(mealDetailsPromiseArr);
             });
+        } else {
+            setActiveMeals(allMeals[activeCategory]);
+            setAvailableIngredients([]);
+
+            const ingredientsWithCountsObj = getIngredientsWithCounts(allMeals[activeCategory]);            
+            setCountedIngredients(ingredientsWithCountsObj);
+            setSuggestedIngredients(sort(Object.keys(ingredientsWithCountsObj)));
         }
     }, [activeCategory]);
 
@@ -45,20 +56,21 @@ function StyledMeals() {
 
             const updatedMeals = {
                 [activeCategory]: formattedRes,
-                ...meals,
+                ...allMeals,
             }
 
-            setMeals(updatedMeals);
+            setAllMeals(updatedMeals);
+            setActiveMeals(updatedMeals[activeCategory])
             setAvailableIngredients([]);
 
-            const ingredientsWithCountsObj = getIngredientsWithCounts(updatedMeals);            
+            const ingredientsWithCountsObj = getIngredientsWithCounts(updatedMeals[activeCategory]);            
             setCountedIngredients(ingredientsWithCountsObj);
             setSuggestedIngredients(sort(Object.keys(ingredientsWithCountsObj)));
         });
     }
 
     function getIngredientsWithCounts(meals) {
-        return meals[activeCategory].reduce((prev, curr) => {
+        return meals.reduce((prev, curr) => {
             for (let i = 1; i <= 20; i++) {
                 let ingredientKey = `strIngredient${i}`;
                 let ingredient  = curr[ingredientKey];
@@ -85,7 +97,7 @@ function StyledMeals() {
         setSuggestedIngredients(sort(updatedSuggestedIngredients));
         setAvailableIngredients(sort(updatedAvailableIngredients));
         
-        setActiveMeals(getActiveMeals(updatedAvailableIngredients));
+        setAvailableMeals(getActiveMeals(updatedAvailableIngredients));
     }
 
     function removeIngredient(item) {
@@ -95,7 +107,7 @@ function StyledMeals() {
         setSuggestedIngredients(sort(updatedSuggestedIngredients));
         setAvailableIngredients(sort(updatedAvailableIngredients));
 
-        setActiveMeals(getActiveMeals(updatedAvailableIngredients));
+        setAvailableMeals(getActiveMeals(updatedAvailableIngredients));
     }
 
     function getMealIngredients(meal) {
@@ -124,7 +136,7 @@ function StyledMeals() {
     }
 
     function getActiveMeals(availableIngredients) {
-        return meals[activeCategory].reduce((prev, curr) => {
+        return allMeals[activeCategory].reduce((prev, curr) => {
             const mealIngredientsArr = getMealIngredients(curr)
 
             if (isMealActive(mealIngredientsArr, availableIngredients)) {
@@ -161,8 +173,7 @@ function StyledMeals() {
             <br/>
             <Meals
                 activeMeals={activeMeals}
-                meals={meals}
-                activeCategory={activeCategory}
+                availableMeals={availableMeals}
             />
         </div>
     )
