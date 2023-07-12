@@ -3,25 +3,25 @@ import Col from 'react-bootstrap/Col';
 
 
 function AllIngredients(props) {
-    // const [maxCount, setMaxCount] = useState(0);
+    const [maxCount, setMaxCount] = useState(0);
 
-    // useEffect(() => {
-    //     const updatedMaxCount = Math.max(...Object.values(props.countedIngredients));
-    //     setMaxCount(updatedMaxCount);
-    // }, [props])
+    useEffect(() => {
+        if (!!props.countedIngredients) {
+            const updatedMaxCount = Math.max(...Object.values(props.countedIngredients));
+            setMaxCount(updatedMaxCount);
+        }
+    }, [props])
     
-    // function getIngredientStyle(item) {
-    //     const ratio = Math.round(props.countedIngredients[item]/maxCount * 10) / 10;
-    //     console.log(ratio);
-    //     return {
-    //         'backgroundColor': 'darkpurple'
-    //         // 'opacity': 1
-    //         // 'color': ratio >= 0.5 ? 'black' : 'white'
-    //     }
-    // }
-
-    const thing = {
-        'backgroundColor': 'darkpurple'
+    function getIngredientStyle(item) {
+        if (!!props.countedIngredients) {
+            const ratio = props.countedIngredients[item]/maxCount;
+            return {
+                'backgroundColor': 'green',
+                'filter': `brightness(${1 + ratio})`,
+                'color': 'white'
+            }    
+        }
+        return;
     }
 
     return (
@@ -31,7 +31,7 @@ function AllIngredients(props) {
             </h4>
             {props.allIngredients.length > 0 && props.allIngredients.map(item =>{
                 return (
-                    <div style={thing} key={`all-ingredients-${item}`}>
+                    <div style={getIngredientStyle(item)} key={`all-ingredients-${item}`}>
                         {item}
                         <button
                             value={item}

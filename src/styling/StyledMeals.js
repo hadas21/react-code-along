@@ -4,6 +4,7 @@ import IngredientContainer from '../effect/IngredientContainer';
 import { sort, filterIngredient, pushIngredient } from '../utils';
 import FoodCategories from '../effect/FoodCategories';
 import Meals from '../effect/Meals';
+import IngredientScale from './IngredientScale';
 
 function StyledMeals() {
     const [categories, setCategories] = useState([]);
@@ -142,6 +143,13 @@ function StyledMeals() {
             />
             <br/>
             <div>Active Category: {activeCategory}</div>
+            <br/>
+            {
+                Object.keys(countedIngredients).length > 0 && 
+                <IngredientScale
+                    countedIngredients={countedIngredients}
+                />
+            }
             <br/>
             <IngredientContainer
                 countedIngredients={countedIngredients}
