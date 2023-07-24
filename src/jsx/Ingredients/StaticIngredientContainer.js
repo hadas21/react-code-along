@@ -10,9 +10,7 @@ function StaticIngredientContainer(props) {
                 return <div key={`all-ingredients-${item}`}>{item}</div>;
             })}
         </div>
-    ) 
-    
-    
+    )
 }
 
 export default StaticIngredientContainer;

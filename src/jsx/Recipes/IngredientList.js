@@ -6,9 +6,7 @@ function IngredientList(props) {
         <ul>
             {props.ingredients.map(ingredient => {
                 return <IngredientItem 
-                    recipe={props.recipe}
                     ingredient={ingredient}
-                    key={`ingredient-item-${props.recipe}-${ingredient}`}
                 />
             })}
         </ul>

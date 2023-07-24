@@ -1,6 +1,6 @@
 import React from 'react';
 import RecipeCard from './RecipeCard';
-import Container from 'react-bootstrap/Row';
+import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 
 function RecipeCards(props) {

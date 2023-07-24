@@ -11,8 +11,8 @@ function App() {
         {/* <StaticRecipeCards/> */}
         {/* <StaticMeals/> */}
         {/* <Meals/> */}
-        {/* <MealCategories/> */}
-        <StyledMeals/>
+        <MealCategories/>
+        {/* <StyledMeals/> */}
       </header>
     </div>
   );

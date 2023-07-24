@@ -1,20 +1,23 @@
 import React from 'react';
-import ActiveIngredients from './ActiveIngredients';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
+import ActiveIngredients from './ActiveIngredients';
 import DiscardedIngredients from './DiscardedIngredients';
+import Ingredients from './Ingredients';
 
 function IngredientContainer(props) {
     return (
         <Container>
             <Row>
-                <ActiveIngredients 
-                    activeIngredients={props.activeIngredients}
-                    handleRemoveIngredient={props.handleRemoveIngredient}
+                <Ingredients 
+                    isActive={true}
+                    ingredients={props.activeIngredients}
+                    handleUpdateIngredient={props.handleRemoveIngredient}
                 />
-                <DiscardedIngredients 
-                    discardedIngredients={props.discardedIngredients}
-                    handleRestoreIngredient={props.handleRestoreIngredient}
+                <Ingredients
+                    isActive={false}
+                    ingredients={props.discardedIngredients}
+                    handleUpdateIngredient={props.handleRestoreIngredient}
                 />
             </Row>
         </Container>

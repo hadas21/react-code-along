@@ -24,44 +24,41 @@ function StyledMeals() {
         });
     }, []);
 
-    useEffect(() => {
-        setAvailableMeals([]);
-        if (activeCategory === '' ) {
-            return ;
-        }
-        if (!allMeals.hasOwnProperty(activeCategory)) {
-            getMealsByCategory(activeCategory).then(mealRes => {
+    function handleSetActiveCategory(category) {
+        if (!allMeals.hasOwnProperty(category)) {
+            getMealsByCategory(category).then(mealRes => {
                 const mealDetailsPromiseArr = mealRes.meals.map(item => {
                     return getMealById(item.idMeal);
                 });
 
-                getMealDetails(mealDetailsPromiseArr);
+                getMealDetails(mealDetailsPromiseArr, category);
             });
         } else {
-            setActiveMeals(allMeals[activeCategory]);
+            setActiveMeals(allMeals[category]);
             setAvailableIngredients([]);
 
-            const ingredientsWithCountsObj = getIngredientsWithCounts(allMeals[activeCategory]);            
+            const ingredientsWithCountsObj = getIngredientsWithCounts(allMeals[category]);            
             setSuggestedIngredients(sort(Object.keys(ingredientsWithCountsObj)));
         }
-    }, [activeCategory]);
+        setActiveCategory(category);
+    }
 
-    function getMealDetails(mealDetailsPromiseArr) {
+    function getMealDetails(mealDetailsPromiseArr, category) {
         Promise.all(mealDetailsPromiseArr).then(res => {
             const formattedRes = res.map(item => {
                 return item.meals[0];
             })
 
             const updatedMeals = {
-                [activeCategory]: formattedRes,
+                [category]: formattedRes,
                 ...allMeals,
             }
 
             setAllMeals(updatedMeals);
-            setActiveMeals(updatedMeals[activeCategory])
+            setActiveMeals(updatedMeals[category])
             setAvailableIngredients([]);
 
-            const ingredientsWithCountsObj = getIngredientsWithCounts(updatedMeals[activeCategory]);
+            const ingredientsWithCountsObj = getIngredientsWithCounts(updatedMeals[category]);
             setSuggestedIngredients(sort(Object.keys(ingredientsWithCountsObj)));
         });
     }
@@ -81,10 +78,6 @@ function StyledMeals() {
             }
             return prev;
         }, {});
-    }
-    
-    function handleSetActiveCategory(item) {
-        setActiveCategory(item);
     }
 
     function addIngredient(item) {

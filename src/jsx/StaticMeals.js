@@ -4,17 +4,17 @@ import RecipeCards from './Recipes/RecipeCards';
 import StaticIngredientContainer from './Ingredients/StaticIngredientContainer';
 
 function StaticMeals() {
-    const allIngredients = getAllIngredients(recipeArr);
-
     return (
         <div>
-            <StaticIngredientContainer allIngredients={allIngredients}/>
-            <RecipeCards recipies={recipeArr}/>
+            <StaticIngredientContainer allIngredients={getUniqueIngredients(recipeArr)}/>
+            <RecipeCards
+                recipies={recipeArr}
+            />
         </div>
     )
 }
 
-function getAllIngredients(recipeArr) {
+function getUniqueIngredients(recipeArr) {
     return recipeArr.reduce((prev, curr) => {
         curr.ingredients.forEach(item => {
             if (!prev.includes(item))  {

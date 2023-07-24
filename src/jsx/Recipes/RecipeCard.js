@@ -1,5 +1,5 @@
 import React from 'react';
-import IngredientList from './IngredientList';
+import IngredientItem from './IngredientItem';
 import Col from 'react-bootstrap/Col';
 
 function RecipeCard(props) {
@@ -8,10 +8,13 @@ function RecipeCard(props) {
             <h5>
                 {props.recipe}
             </h5>
-            <IngredientList 
-                recipe={props.recipe}
-                ingredients={props.ingredients}
-            />
+            <ul>
+                {props.ingredients.map(ingredient => {
+                    return <IngredientItem 
+                        ingredient={ingredient}
+                    />
+                })}
+            </ul>
         </Col>
     )
 }
